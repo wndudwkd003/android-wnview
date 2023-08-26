@@ -13,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.zyn.wnview.R
+import com.zyn.wnview.utils.AnimateUtil
 import com.zyn.wnview.utils.Conversions
 import com.zyn.wnview.utils.ReverseInterpolator
 
@@ -23,22 +24,20 @@ class CircleIndicator : LinearLayout {
 
     private lateinit var mContext: Context
 
-    private var mCircleDiameter: Int = 0
-    private var mExpandedDiameter: Int = 0
-    private var mCount: Int = 0
-    private var mLastCount = -1
-    private var mLastPosition = -1
+    private var circleDiameter: Int = 0
+    private var expandedDiameter: Int = 0
+    private var count: Int = 0
+    private var lastCount = -1
+    private var lastPosition = -1
 
-    private var mDefaultMargin: Int = 20
-    private var mMarginTop: Int = 0
-    private var mMarginBottom: Int = 0
-    private var mMarginStart: Int = 0
-    private var mMarginEnd: Int = 0
+    private var defaultMargin: Int = 20
+    private var marginTop: Int = 0
+    private var marginBottom: Int = 0
+    private var marginStart: Int = 0
+    private var marginEnd: Int = 0
 
-    private lateinit var mAnimatorOut: Animator
-    private lateinit var mAnimatorIn: Animator
-    private lateinit var mImmediateAnimatorOut: Animator
-    private lateinit var mImmediateAnimatorIn: Animator
+    private val animateUtil = AnimateUtil()
+
 
     @AnimatorRes
     var mAnimatorResId = R.animator.scale_with_alpha
@@ -59,7 +58,7 @@ class CircleIndicator : LinearLayout {
     }
 
 
-    private var mViewPager2: ViewPager2? = null
+    private lateinit var viewPager2: ViewPager2
 
 
     constructor(context: Context) : super(context) {
@@ -81,10 +80,10 @@ class CircleIndicator : LinearLayout {
      * margin 설정
      */
     fun setMargin(start: Int, top: Int, end: Int, bottom: Int) {
-        mMarginStart = start
-        mMarginTop = top
-        mMarginEnd = end
-        mMarginBottom = bottom
+        marginStart = start
+        marginTop = top
+        marginEnd = end
+        marginBottom = bottom
     }
 
     override fun invalidate() {
@@ -105,21 +104,21 @@ class CircleIndicator : LinearLayout {
         mContext = context
         orientation = HORIZONTAL
         setMargin(
-            Conversions.dpToPx(mContext, mDefaultMargin / 2),
-            Conversions.dpToPx(mContext, mDefaultMargin),
-            Conversions.dpToPx(mContext, mDefaultMargin / 2),
-            Conversions.dpToPx(mContext, mDefaultMargin)
+            Conversions.dpToPx(mContext, defaultMargin / 2),
+            Conversions.dpToPx(mContext, defaultMargin),
+            Conversions.dpToPx(mContext, defaultMargin / 2),
+            Conversions.dpToPx(mContext, defaultMargin)
         )
-        mCircleDiameter = Conversions.dpToPx(mContext, 10)
-        mExpandedDiameter = Conversions.dpToPx(mContext, 30)
+        circleDiameter = Conversions.dpToPx(mContext, 10)
+        expandedDiameter = Conversions.dpToPx(mContext, 30)
 
-        mAnimatorOut = createAnimatorOut()
-        mImmediateAnimatorOut = createAnimatorOut()
-        mImmediateAnimatorOut.duration = 0
+        animateUtil.animatorOut = createAnimatorOut()
+        animateUtil.immediateAnimatorOut = createAnimatorOut()
+        animateUtil.immediateAnimatorOut.duration = 0
 
-        mAnimatorIn = createAnimatorIn()
-        mImmediateAnimatorIn = createAnimatorIn()
-        mImmediateAnimatorIn.duration = 0
+        animateUtil.animatorIn = createAnimatorIn()
+        animateUtil.immediateAnimatorIn = createAnimatorIn()
+        animateUtil.immediateAnimatorIn.duration = 0
 
     }
 
@@ -139,37 +138,29 @@ class CircleIndicator : LinearLayout {
 
 
     private fun createCircleIndicator() {
-        for (i in 0 until mCount) {
+        for (i in 0 until count) {
             val indicator = createCircleView()
             setIndicatorBackground(indicator, mUnselectedBackgroundId)
 
-            mImmediateAnimatorIn.setTarget(indicator)
-            mImmediateAnimatorIn.start()
-            mImmediateAnimatorIn.end()
+            animateUtil.animationPlay(animateUtil.immediateAnimatorIn, indicator)
+
             addView(indicator)
 
-            mLastPosition = mCount
+            lastPosition = count
         }
     }
 
+    fun setViewPager(vp2: ViewPager2) {
+        viewPager2 = vp2
 
-
-
-
-    fun setViewPager(viewPager: ViewPager2) {
-        mViewPager2 = viewPager
-
-        if (mViewPager2?.adapter != null) {
-            mCount = viewPager.adapter!!.itemCount
-
-            mViewPager2?.unregisterOnPageChangeCallback(mPageChangeListener)
-            mViewPager2?.registerOnPageChangeCallback(mPageChangeListener)
-            mPageChangeListener.onPageSelected(mViewPager2!!.currentItem)
+        if (viewPager2.adapter != null && viewPager2.adapter?.itemCount != null) {
+            count = viewPager2.adapter!!.itemCount
+            viewPager2.unregisterOnPageChangeCallback(mPageChangeListener)
+            viewPager2.registerOnPageChangeCallback(mPageChangeListener)
+            mPageChangeListener.onPageSelected(viewPager2.currentItem)
         }
+
     }
-
-
-
 
 
     private fun createCircleView(): View {
@@ -179,8 +170,8 @@ class CircleIndicator : LinearLayout {
                 canvas?.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), (width  / 2).toFloat(), mPaint)
             }
         }.apply {
-            val params = LayoutParams(mCircleDiameter, mCircleDiameter)
-            params.setMargins(mMarginStart, mMarginTop, mMarginEnd, mMarginBottom)
+            val params = LayoutParams(circleDiameter, circleDiameter)
+            params.setMargins(marginStart, marginTop, marginEnd, marginBottom)
             layoutParams = params
         }
         return circleView
@@ -189,9 +180,9 @@ class CircleIndicator : LinearLayout {
     private val mPageChangeListener = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
-            if (position == mLastCount
-                || mViewPager2?.adapter == null
-                || mViewPager2?.adapter!!.itemCount <= 0) {
+            if (position == lastCount
+                || viewPager2.adapter == null
+                || viewPager2.adapter!!.itemCount <= 0) {
                 return
             }
             animatePageSelected(position)
@@ -200,43 +191,30 @@ class CircleIndicator : LinearLayout {
 
     private fun animatePageSelected(position: Int) {
 
-        if (mLastPosition == position) {
+        if (lastPosition == position) {
             return
         }
 
-        if (mAnimatorIn.isRunning) {
-            mAnimatorIn.end()
-            mAnimatorIn.cancel()
-        }
+        animateUtil.allStop()
 
-        if (mAnimatorOut.isRunning) {
-            mAnimatorOut.end()
-            mAnimatorOut.cancel()
-        }
-
-        val currentIndicator = getChildAt(mLastPosition)
-        if (mLastPosition >= 0 && currentIndicator != null) {
+        val currentIndicator = getChildAt(lastPosition)
+        if (lastPosition >= 0 && currentIndicator != null) {
             setIndicatorBackground(currentIndicator, mBackgroundResId)
-            mAnimatorIn.setTarget(currentIndicator)
-            mAnimatorIn.start()
+            animateUtil.animationPlay(animateUtil.animatorIn, currentIndicator)
         }
 
         val selectedIndicator = getChildAt(position)
         if (selectedIndicator != null) {
             setIndicatorBackground(selectedIndicator, mUnselectedBackgroundId)
-
-            mAnimatorOut.setTarget(selectedIndicator)
-            mAnimatorOut.start()
+            animateUtil.animationPlay(animateUtil.animatorOut, selectedIndicator)
         }
 
-        mLastPosition = position
+        lastPosition = position
     }
 
     private fun setIndicatorBackground(indicator: View, resId: Int) {
         indicator.setBackgroundResource(resId)
     }
-
-
 
 
 }
