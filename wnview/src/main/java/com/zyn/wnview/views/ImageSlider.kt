@@ -62,7 +62,7 @@ class ImageSlider : WnView {
     /**
      * View Pager 2를 기반으로 동작하기 때문에 내부적으로 생성
      */
-    private fun initViewPager2() {
+    private fun createViewPager2() {
         mViewPager2 = ViewPager2(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
@@ -74,7 +74,7 @@ class ImageSlider : WnView {
      */
     private fun updateViewPager2(adapter: ViewPager2Adapter) {
         if(mViewPager2 == null) {
-            initViewPager2()
+            createViewPager2()
         }
         mViewPager2?.adapter = adapter
     }
@@ -82,7 +82,7 @@ class ImageSlider : WnView {
     /**
      * Circle Indicator를 생성한다
      */
-    private fun initCircleIndicator() {
+    private fun createCircleIndicator() {
         val layoutDirection = LayoutDirection(mIndicatorDirection)
         mCircleIndicator = CircleIndicator(context).apply {
             val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
@@ -97,7 +97,7 @@ class ImageSlider : WnView {
      */
     private fun updateCircleIndicator() {
         if (mCircleIndicator == null) {
-            initCircleIndicator()
+            createCircleIndicator()
         }
         mCircleIndicator?.setViewPager(mViewPager2!!)
         mCircleIndicator?.invalidate()

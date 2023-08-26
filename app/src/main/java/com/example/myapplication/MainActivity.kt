@@ -12,8 +12,9 @@ class MainActivity : AppCompatActivity() {
         val imageSlider = findViewById<ImageSlider>(R.id.imageSlider)
         val items = listOf(
             R.drawable.ic_launcher_background,
-            R.drawable.ic_android_black_24dp,
-            R.drawable.ic_launcher_foreground
+            R.drawable.ic_launcher_background,
+            R.drawable.ic_launcher_background,
+            R.drawable.ic_launcher_background
         )
 
         imageSlider.imageItemList = items
