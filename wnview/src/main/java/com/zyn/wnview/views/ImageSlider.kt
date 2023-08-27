@@ -104,7 +104,7 @@ class ImageSlider : WnView {
     }
 
 
-    val imageScaleType: ImageView.ScaleType = ImageView.ScaleType.MATRIX
+    var imageScaleType: ImageView.ScaleType? = null
 
 
     private fun initImageSlider(context: Context, attrs: AttributeSet?) {
@@ -211,7 +211,9 @@ class ImageSlider : WnView {
         if (imageList != null) {
             for (image in imageList!!) {
                 val fragment = ImageFragment(image)
-                fragment.imageScaleType = imageScaleType
+                if (imageScaleType != null) {
+                    fragment.imageScaleType = imageScaleType
+                }
                 imageFragmentList.add(fragment)
             }
         }

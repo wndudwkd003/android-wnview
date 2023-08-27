@@ -22,7 +22,10 @@ class ImageFragment(val image: Int) : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         imageView = ImageView(requireContext())
-        imageView?.scaleType = imageScaleType
+        if (imageScaleType != null) {
+            imageView?.scaleType = imageScaleType
+        }
+
         // imageView.setImageResource(image)
         Glide.with(requireContext()).load(image).into(imageView!!)
         imageView!!.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)

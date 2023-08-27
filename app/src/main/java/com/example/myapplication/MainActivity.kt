@@ -22,9 +22,10 @@ class MainActivity : AppCompatActivity() {
         )
 
         imageSlider.imageItemList = items
+        imageSlider.imageScaleType = ImageView.ScaleType.CENTER
         imageSlider.setOnImageClickListener(object : ImageSlider.OnImageClickListener {
             override fun onImageClick(position: Int, context: Context) {
-                Toast.makeText(context, position.toString() + "Click", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, position.toString() + " Click", Toast.LENGTH_SHORT).show()
             }
         })
         imageSlider.invalidate()
