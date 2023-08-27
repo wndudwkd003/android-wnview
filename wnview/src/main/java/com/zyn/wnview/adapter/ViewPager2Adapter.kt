@@ -18,8 +18,8 @@ class ViewPager2Adapter(private val list: List<ImageFragment>, fragmentManager: 
         val fragment = list[position]
 
         fragment.setPosition(position)
-        fragment.itemClickListener = { pos ->
-            listener?.onImageClick(pos)
+        fragment.itemClickListener = { pos, context ->
+            listener?.onImageClick(pos, context)
         }
         return fragment
     }

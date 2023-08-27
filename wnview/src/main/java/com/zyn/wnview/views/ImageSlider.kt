@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.Gravity
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -72,7 +73,7 @@ class ImageSlider : WnView {
 
 
     interface OnImageClickListener {
-        fun onImageClick(position: Int)
+        fun onImageClick(position: Int, context: Context)
 
     }
 
@@ -101,6 +102,9 @@ class ImageSlider : WnView {
     fun setOnImageClickListener(listener: OnImageClickListener) {
         this.listener = listener
     }
+
+
+    val imageScaleType: ImageView.ScaleType = ImageView.ScaleType.MATRIX
 
 
     private fun initImageSlider(context: Context, attrs: AttributeSet?) {
@@ -207,6 +211,7 @@ class ImageSlider : WnView {
         if (imageList != null) {
             for (image in imageList!!) {
                 val fragment = ImageFragment(image)
+                fragment.imageScaleType = imageScaleType
                 imageFragmentList.add(fragment)
             }
         }

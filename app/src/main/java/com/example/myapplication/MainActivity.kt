@@ -1,8 +1,11 @@
 package com.example.myapplication
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.Toast
 import com.zyn.wnview.views.ImageSlider
 
 class MainActivity : AppCompatActivity() {
@@ -12,16 +15,16 @@ class MainActivity : AppCompatActivity() {
 
         val imageSlider = findViewById<ImageSlider>(R.id.imageSlider)
         val items = listOf(
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background
+            R.drawable.test_image_1,
+            R.drawable.test_image_2,
+            R.drawable.test_image_3,
+            R.drawable.test_image_4
         )
 
         imageSlider.imageItemList = items
         imageSlider.setOnImageClickListener(object : ImageSlider.OnImageClickListener {
-            override fun onImageClick(position: Int) {
-                Log.d("asd", position.toString())
+            override fun onImageClick(position: Int, context: Context) {
+                Toast.makeText(context, position.toString() + "Click", Toast.LENGTH_SHORT).show()
             }
         })
         imageSlider.invalidate()
