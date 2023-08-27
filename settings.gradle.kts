@@ -17,3 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "WnView"
 include(":app")
 include(":wnviewLib")
+
+
