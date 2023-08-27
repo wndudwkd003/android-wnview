@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CircleIndicator" >
+    <!-- 내/외부 보이는 설정 -->
+    <attr name="indicatorInnerVisibility" format="enum"/>
+    <attr name="indicatorOuterVisibility" format="enum"/>
 
-        <!-- 내/외부 보이는 설정 -->
-        <attr name="innerVisibility" format="enum"/>
-        <attr name="outerVisibility" format="enum"/>
+    <!-- 내/외부 색상 설정 -->
+    <attr name="indicatorInnerColor" format="color"/>
+    <attr name="indicatorOuterColor" format="color"/>
 
-        <!-- 내/외부 색상 설정 -->
-        <attr name="innerColor" format="color"/>
-        <attr name="outerColor" format="color"/>
+    <!-- 선택에 따른 투명도 설정 -->
+    <attr name="indicatorSelectedAlpha" format="float"/>
+    <attr name="indicatorDefaultAlpha" format="float"/>
 
-        <!-- 선택에 따른 투명도 설정 -->
-        <attr name="selectedAlpha" format="float"/>
-        <attr name="defaultAlpha" format="float"/>
+    <!-- 기본 크기 설정 -->
+    <attr name="indicatorRadius" format="integer"/>
+    <attr name="indicatorViewWidth" format="integer"/>
+    <attr name="indicatorViewHeight" format="integer"/>
 
-        <!-- 기본 크기 설정 -->
-        <attr name="radius" format="integer"/>
+    <!-- 선택에 따른 배율 설정 -->
+    <attr name="indicatorDefaultMagnification" format="float"/>
+    <attr name="indicatorSelectedMagnification" format="float"/>
 
-        <!-- 선택에 따른 배율 설정 -->
-        <attr name="defaultMagnification" format="float"/>
-        <attr name="selectedMagnification" format="float"/>
+    <!-- Indicator 각각의 마진 설정 -->
+    <attr name="indicatorMarginStart" format="integer" />
+    <attr name="indicatorMarginTop" format="integer" />
+    <attr name="indicatorMarginRight" format="integer" />
+    <attr name="indicatorMarginBottom" format="integer" />
 
+    <declare-styleable name="ImageSlider">
+        <attr name="indicatorViewWidth" />
+        <attr name="indicatorViewHeight" />
+        <attr name="indicatorInnerVisibility"/>
+        <attr name="indicatorOuterVisibility"/>
+        <attr name="indicatorInnerColor"/>
+        <attr name="indicatorOuterColor"/>
+        <attr name="indicatorSelectedAlpha"/>
+        <attr name="indicatorDefaultAlpha"/>
+        <attr name="indicatorRadius"/>
+        <attr name="indicatorDefaultMagnification"/>
+        <attr name="indicatorSelectedMagnification"/>
+        <attr name="indicatorMarginStart"/>
+        <attr name="indicatorMarginTop"/>
+        <attr name="indicatorMarginRight"/>
+        <attr name="indicatorMarginBottom"/>
+    </declare-styleable>
 
-        <!-- Indicator 각각의 마진 설정 -->
-        <attr name="indicatorMarginStart" format="integer" />
-        <attr name="indicatorMarginTop" format="integer" />
-        <attr name="indicatorMarginRight" format="integer" />
-        <attr name="indicatorMarginBottom" format="integer" />
-
+    <declare-styleable name="CircleIndicator">
+        <attr name="indicatorViewWidth" />
+        <attr name="indicatorViewHeight" />
+        <attr name="indicatorInnerVisibility"/>
+        <attr name="indicatorOuterVisibility"/>
+        <attr name="indicatorInnerColor"/>
+        <attr name="indicatorOuterColor"/>
+        <attr name="indicatorSelectedAlpha"/>
+        <attr name="indicatorDefaultAlpha"/>
+        <attr name="indicatorRadius"/>
+        <attr name="indicatorDefaultMagnification"/>
+        <attr name="indicatorSelectedMagnification"/>
+        <attr name="indicatorMarginStart"/>
+        <attr name="indicatorMarginTop"/>
+        <attr name="indicatorMarginRight"/>
+        <attr name="indicatorMarginBottom"/>
     </declare-styleable>
 </resources>

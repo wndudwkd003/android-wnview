@@ -2,7 +2,10 @@ package com.zyn.wnview.utils
 
 import androidx.constraintlayout.widget.ConstraintLayout
 
-class LayoutDirection(private val position: Position) {
+class LayoutDirection {
+
+    var position: Position? = null
+
 
     enum class Position {
         LEFT_TOP,
@@ -17,11 +20,13 @@ class LayoutDirection(private val position: Position) {
     }
 
 
+
+
     /**
      * 사용자 위치에 따른 Constraint Layout에서 Layout Params를 설정한다
      */
     fun applyConstraintPosition(params: ConstraintLayout.LayoutParams) {
-        when (position) {
+        when (position!!) {
             Position.LEFT_TOP -> {
                 params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                 params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID

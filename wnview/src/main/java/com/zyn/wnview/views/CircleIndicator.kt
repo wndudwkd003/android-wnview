@@ -33,20 +33,28 @@ class CircleIndicator : LinearLayout {
     private var lastCount = -1
     private var lastPosition = -1
 
-    private var indicatorMarginStart: Int = 0
-    private var indicatorMarginTop: Int = 0
-    private var indicatorMarginRight: Int = 0
-    private var indicatorMarginBottom: Int = 0
+    var indicatorMarginStart: Int = 0
+    var indicatorMarginTop: Int = 0
+    var indicatorMarginRight: Int = 0
+    var indicatorMarginBottom: Int = 0
 
-    private var innerVisibility: Int = View.VISIBLE
-    private var outerVisibility: Int = View.INVISIBLE
-    private var innerColor: Int = Color.WHITE
-    private var outerColor: Int = Color.WHITE
-    private var selectedAlpha: Float = 1.0f
-    private var defaultAlpha: Float = 0.5f
-    private var radius: Int = 10
-    private var defaultMagnification: Float = 1.0f
-    private var selectedMagnification: Float = 1.5f
+    var innerVisibility: Int = View.VISIBLE
+    var outerVisibility: Int = View.INVISIBLE
+    var innerColor: Int = Color.WHITE
+    var outerColor: Int = Color.WHITE
+    var selectedAlpha: Float = 1.0f
+    var defaultAlpha: Float = 0.5f
+    var radius: Int = 10
+    var defaultMagnification: Float = 1.0f
+    var selectedMagnification: Float = 1.5f
+
+
+    var indicatorViewWidth: Int = 0
+    var indicatorViewHeight: Int = 0
+
+
+    var parentHeight: Int = 0
+    var parentWidth: Int = 0
 
     constructor(context: Context) : super(context) {
         initCircleIndicator(context, null)
@@ -86,7 +94,7 @@ class CircleIndicator : LinearLayout {
 
     private fun setDefaultValues() {
         // 마진 설정
-        setMargin(10, 20, 10, 10)
+        setMargin(10, 20, 10, 20)
 
         // 애니메이터 설정
         animateUtil.animatorOut = createAnimatorOut()
@@ -115,36 +123,37 @@ class CircleIndicator : LinearLayout {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleIndicator)
             try {
                 // Indicator visibility 설정
-                innerVisibility = typedArray.getInt(R.styleable.CircleIndicator_innerVisibility, View.VISIBLE)
-                outerVisibility = typedArray.getInt(R.styleable.CircleIndicator_outerVisibility, View.VISIBLE)
+                innerVisibility = typedArray.getInt(R.styleable.CircleIndicator_indicatorInnerVisibility, View.VISIBLE)
+                outerVisibility = typedArray.getInt(R.styleable.CircleIndicator_indicatorOuterVisibility, View.VISIBLE)
 
                 // Indicator 색깔 설정
-                innerColor = typedArray.getColor(R.styleable.CircleIndicator_innerColor, Color.WHITE)
-                outerColor = typedArray.getColor(R.styleable.CircleIndicator_outerColor, Color.BLACK)
+                innerColor = typedArray.getColor(R.styleable.CircleIndicator_indicatorInnerColor, Color.WHITE)
+                outerColor = typedArray.getColor(R.styleable.CircleIndicator_indicatorOuterColor, Color.BLACK)
 
                 // Indicator 투명도 xml 값 설정
-                selectedAlpha = typedArray.getFloat(R.styleable.CircleIndicator_selectedAlpha, 1.0f)
-                defaultAlpha = typedArray.getFloat(R.styleable.CircleIndicator_defaultAlpha, 0.5f)
+                selectedAlpha = typedArray.getFloat(R.styleable.CircleIndicator_indicatorSelectedAlpha, 1.0f)
+                defaultAlpha = typedArray.getFloat(R.styleable.CircleIndicator_indicatorDefaultAlpha, 0.5f)
 
                 // Indicator 반지름 xml 값 설정
-                radius = typedArray.getInt(R.styleable.CircleIndicator_radius, 10)
+                radius = typedArray.getInt(R.styleable.CircleIndicator_indicatorRadius, 10)
                 radius = conversions.dpToPx(radius)
 
                 // Indicator 배율 xml 값 설정
-                defaultMagnification = typedArray.getFloat(R.styleable.CircleIndicator_defaultMagnification, 1.0f)
-                selectedMagnification = typedArray.getFloat(R.styleable.CircleIndicator_selectedMagnification, 1.5f)
+                defaultMagnification = typedArray.getFloat(R.styleable.CircleIndicator_indicatorDefaultMagnification, 1.0f)
+                selectedMagnification = typedArray.getFloat(R.styleable.CircleIndicator_indicatorSelectedMagnification, 1.5f)
 
                 // Indicator 마진 xml 값 설정
                 indicatorMarginStart = typedArray.getInt(R.styleable.CircleIndicator_indicatorMarginStart, 10)
                 indicatorMarginTop = typedArray.getInt(R.styleable.CircleIndicator_indicatorMarginTop, 20)
                 indicatorMarginRight = typedArray.getInt(R.styleable.CircleIndicator_indicatorMarginRight, 10)
-                indicatorMarginBottom = typedArray.getInt(R.styleable.CircleIndicator_indicatorMarginBottom, 10)
+                indicatorMarginBottom = typedArray.getInt(R.styleable.CircleIndicator_indicatorMarginBottom, 20)
+
 
                 // Indicator 마진 설정
                 setMargin(indicatorMarginStart, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom)
 
                 innerPaint.color = innerColor   // 내곽선 색깔 설정
-                outerPaint.color = innerColor   // 외곽선 색깔 설정
+                outerPaint.color = outerColor   // 외곽선 색깔 설정
 
             } finally {
                 typedArray.recycle()
@@ -157,8 +166,8 @@ class CircleIndicator : LinearLayout {
 
     private fun createAnimatorOut(): Animator {
         val alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", defaultAlpha, selectedAlpha)
-        val scaleXAnimator = ObjectAnimator.ofFloat(this, "scaleX", 1.0f, selectedMagnification)
-        val scaleYAnimator = ObjectAnimator.ofFloat(this, "scaleY", 1.0f, selectedMagnification)
+        val scaleXAnimator = ObjectAnimator.ofFloat(this, "scaleX", defaultMagnification, selectedMagnification)
+        val scaleYAnimator = ObjectAnimator.ofFloat(this, "scaleY", defaultMagnification, selectedMagnification)
 
         return animateUtil.createAnimatorSet(this, alphaAnimator, scaleXAnimator, scaleYAnimator)
     }
@@ -166,8 +175,8 @@ class CircleIndicator : LinearLayout {
 
     private fun createAnimatorIn(): Animator {
         val alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", selectedAlpha, defaultAlpha)
-        val scaleXAnimator = ObjectAnimator.ofFloat(this, "scaleX", selectedMagnification, 1.0f)
-        val scaleYAnimator = ObjectAnimator.ofFloat(this, "scaleY", selectedMagnification, 1.0f)
+        val scaleXAnimator = ObjectAnimator.ofFloat(this, "scaleX", selectedMagnification, defaultMagnification)
+        val scaleYAnimator = ObjectAnimator.ofFloat(this, "scaleY", selectedMagnification, defaultMagnification)
 
         return animateUtil.createAnimatorSet(this, alphaAnimator, scaleXAnimator, scaleYAnimator)
     }
