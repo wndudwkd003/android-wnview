@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.zyn.wnview.adapter.ViewPager2Adapter
 import com.zyn.wnview.fragment.ImageFragment
@@ -23,10 +22,11 @@ class ImageSlider : WnView {
     private var mImageItemList: List<Int>? = null
     private var viewPager2: ViewPager2? = null
     private lateinit var circleIndicator: CircleIndicator
-    private lateinit var mAdapter: ViewPager2Adapter
+    private lateinit var viewPager2Adapter: ViewPager2Adapter
 
     private lateinit var converter: Conversions
 
+    private var listener: OnImageClickListener? = null
 
 
 
@@ -38,6 +38,10 @@ class ImageSlider : WnView {
 
 
 
+    interface OnImageClickListener {
+        fun onImageClick(position: Int)
+
+    }
 
 
     var imageItemList: List<Int>?
@@ -59,6 +63,10 @@ class ImageSlider : WnView {
 
     fun setIndicatorDirection(direction: LayoutDirection.Position) {
         indicatorDirection = direction
+    }
+
+    fun setOnImageClickListener(listener: OnImageClickListener) {
+        this.listener = listener
     }
 
 
@@ -88,6 +96,7 @@ class ImageSlider : WnView {
         if(viewPager2 == null) {
             createViewPager2()
         }
+
         viewPager2?.adapter = adapter
     }
 
@@ -120,7 +129,7 @@ class ImageSlider : WnView {
     override fun invalidate() {
         super.invalidate()
 
-        val imageFragmentList = ArrayList<Fragment>()
+        val imageFragmentList = ArrayList<ImageFragment>()
 
         if (mImageItemList != null) {
             for (image in mImageItemList!!) {
@@ -134,9 +143,10 @@ class ImageSlider : WnView {
         val lifecycle = activity?.lifecycle
 
         if (fragmentManager != null && lifecycle != null) {
-            mAdapter = ViewPager2Adapter(imageFragmentList, fragmentManager, lifecycle)
+            viewPager2Adapter = ViewPager2Adapter(imageFragmentList, fragmentManager, lifecycle)
+            viewPager2Adapter.listener = listener
 
-            updateViewPager2(mAdapter)
+            updateViewPager2(viewPager2Adapter)
             updateCircleIndicator()
 
         }

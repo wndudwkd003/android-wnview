@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.zyn.wnview.views.ImageSlider
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,11 @@ class MainActivity : AppCompatActivity() {
         )
 
         imageSlider.imageItemList = items
+        imageSlider.setOnImageClickListener(object : ImageSlider.OnImageClickListener {
+            override fun onImageClick(position: Int) {
+                Log.d("asd", position.toString())
+            }
+        })
         imageSlider.invalidate()
 
     }
