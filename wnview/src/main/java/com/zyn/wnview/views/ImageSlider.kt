@@ -2,11 +2,13 @@ package com.zyn.wnview.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.zyn.wnview.adapter.ViewPager2Adapter
 import com.zyn.wnview.fragment.ImageFragment
+import com.zyn.wnview.utils.Conversions
 import com.zyn.wnview.utils.LayoutDirection
 
 /**
@@ -16,13 +18,14 @@ import com.zyn.wnview.utils.LayoutDirection
  */
 class ImageSlider : WnView {
 
-    private var mContext: Context? = null
+    private lateinit var mContext: Context
 
     private var mImageItemList: List<Int>? = null
-    private var mViewPager2: ViewPager2? = null
-    private var mCircleIndicator: CircleIndicator? = null
-
+    private var viewPager2: ViewPager2? = null
+    private lateinit var circleIndicator: CircleIndicator
     private lateinit var mAdapter: ViewPager2Adapter
+
+    private lateinit var converter: Conversions
 
 
 
@@ -31,7 +34,7 @@ class ImageSlider : WnView {
      * indicator 방향
      * 기본 값 = CENTER_BOTTOM
      */
-    private var mIndicatorDirection: LayoutDirection.Position = LayoutDirection.Position.CENTER_BOTTOM
+    private var indicatorDirection: LayoutDirection.Position = LayoutDirection.Position.CENTER_BOTTOM
 
 
 
@@ -44,63 +47,71 @@ class ImageSlider : WnView {
         }
 
     constructor(context: Context) : super(context) {
-        mContext = context
+        initImageSlider(context)
     }
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        mContext = context
+        initImageSlider(context)
     }
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        mContext = context
+        initImageSlider(context)
     }
 
 
     fun setIndicatorDirection(direction: LayoutDirection.Position) {
-        mIndicatorDirection = direction
+        indicatorDirection = direction
     }
 
+
+    private fun initImageSlider(context: Context) {
+
+        mContext = context
+        converter = Conversions(mContext)
+
+
+
+    }
 
     /**
      * View Pager 2를 기반으로 동작하기 때문에 내부적으로 생성
      */
     private fun createViewPager2() {
-        mViewPager2 = ViewPager2(context).apply {
+        viewPager2 = ViewPager2(mContext).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
-        addView(mViewPager2)
+        addView(viewPager2)
     }
 
     /**
      * View Pager2를 업데이트하며 어댑터를 설정한다
      */
     private fun updateViewPager2(adapter: ViewPager2Adapter) {
-        if(mViewPager2 == null) {
+        if(viewPager2 == null) {
             createViewPager2()
         }
-        mViewPager2?.adapter = adapter
+        viewPager2?.adapter = adapter
     }
 
     /**
      * Circle Indicator를 생성한다
      */
     private fun createCircleIndicator() {
-        val layoutDirection = LayoutDirection(mIndicatorDirection)
-        mCircleIndicator = CircleIndicator(context).apply {
-            val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        val layoutDirection = LayoutDirection(indicatorDirection)
+        circleIndicator = CircleIndicator(mContext).apply {
+            val params = LayoutParams(LayoutParams.MATCH_PARENT, converter.dpToPx(100))
             layoutDirection.applyConstraintPosition(params)
             layoutParams = params
+            gravity = Gravity.CENTER
         }
-        addView(mCircleIndicator)
+        addView(circleIndicator)
     }
 
     /**
      * Circle Indicator 에 View Pager를 등록하며 업데이트 한다
      */
     private fun updateCircleIndicator() {
-        if (mCircleIndicator == null) {
-            createCircleIndicator()
-        }
-        mCircleIndicator?.setViewPager(mViewPager2!!)
-        mCircleIndicator?.invalidate()
+        createCircleIndicator()
+        circleIndicator.setViewPager(viewPager2!!)
+        circleIndicator.invalidate()
     }
 
     /**

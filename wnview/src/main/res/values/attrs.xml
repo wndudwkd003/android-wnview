@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleIndicator" >
+
+        <!-- 내/외부 보이는 설정 -->
+        <attr name="innerVisibility" format="enum"/>
+        <attr name="outerVisibility" format="enum"/>
+
+        <!-- 내/외부 색상 설정 -->
+        <attr name="innerColor" format="color"/>
+        <attr name="outerColor" format="color"/>
+
+        <!-- 선택에 따른 투명도 설정 -->
+        <attr name="selectedAlpha" format="float"/>
+        <attr name="defaultAlpha" format="float"/>
+
+        <!-- 기본 크기 설정 -->
+        <attr name="radius" format="integer"/>
+
+        <!-- 선택에 따른 배율 설정 -->
+        <attr name="defaultMagnification" format="float"/>
+        <attr name="selectedMagnification" format="float"/>
+
+
+        <!-- Indicator 각각의 마진 설정 -->
+        <attr name="indicatorMarginStart" format="integer" />
+        <attr name="indicatorMarginTop" format="integer" />
+        <attr name="indicatorMarginRight" format="integer" />
+        <attr name="indicatorMarginBottom" format="integer" />
+
+    </declare-styleable>
+</resources>
